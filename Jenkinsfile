@@ -16,7 +16,6 @@ pipeline {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [[$class: 'CleanCheckout']], userRemoteConfigs: [[credentialsId: 'credenciales_git_2', url: 'https://github.com/Ticicobresiserr/springboot.git']]])
                 sh "echo 'github 1'"
                 sh "docker build -t test-spring-boot ."
-                // sh "mvn clean package springboot:repackage "
 
             }
 
@@ -38,6 +37,22 @@ pipeline {
                 
             
             }
+        }
+        
+        stage('MVN') {
+            steps {
+                sh "mvn clean package"
+                
+                post {
+                always {
+              
+                       junit 'target\*.jar'
+                      
+                }
+            } 
+
+            }
+
         }
     }
 }
